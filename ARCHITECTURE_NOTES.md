@@ -69,5 +69,52 @@ Esto permite aislar cambios de la API externa sin que rompan toda la lógica int
 - Permite múltiples orígenes de datos (APIs, local, etc.) sin modificar la UI
 
 ---
+# Estructura de Varios Datasources vs Repository
+
+En una arquitectura limpia, la separación de responsabilidades es clave. A continuación, se explica cómo funcionan los **datasources** y los **repositories** en este contexto, y cómo gestionamos múltiples fuentes de datos dentro de un `repository`.
+
+## 1. **Datasources**: Varias Implementaciones
+
+Un **datasource** es una clase responsable de obtener los datos desde una fuente externa o interna (por ejemplo, una API, una base de datos local, un archivo, etc.). En este caso, podemos tener varias implementaciones de **datasources**, ya que cada uno se conecta a un **origen de datos específico**.
+
+### Ejemplos de `datasources`:
+- **`MoviedbDatasource`**: Se conecta a la API de TheMovieDB para obtener las películas en cartelera.
+- **`LocalMoviesDatasource`**: Conecta con una base de datos local, como SQLite, para obtener los datos guardados.
+- **`MockMoviesDatasource`**: Para pruebas, podríamos tener un `datasource` simulado que regrese datos falsos.
+
+Cada implementación de `datasource` es responsable de manejar la lógica de cómo obtener los datos, ya sea desde la red o desde un almacenamiento local.
+
+## 2. **Repository**: Una Implementación que Coordina los Datasources
+
+El **repository** es la capa intermedia entre los `datasources` y la UI. Su trabajo es decidir qué `datasource` utilizar, transformar los datos (si es necesario) y proporcionarlos a la aplicación de manera que se ajusten a la entidad de dominio.
+
+### ¿Por qué solo una implementación del repository?
+Aunque podemos tener **múltiples datasources**, por lo general solo se necesita **una implementación del repository**. El `repository` será el encargado de decidir qué `datasource` utilizar dependiendo de la situación.
+
+### Ejemplo de cómo un repository puede coordinar múltiples datasources:
+
+```dart
+class MoviesRepositoryImpl implements MoviesRepository {
+  final MoviesDatasource remoteDatasource;
+  final MoviesDatasource localDatasource;
+
+  MoviesRepositoryImpl({
+    required this.remoteDatasource,
+    required this.localDatasource,
+  });
+
+  @override
+  Future<List<Movie>> getNowPlaying({int page = 1}) async {
+    try {
+      // Intentamos primero con el datasource remoto (API externa)
+      return await remoteDatasource.getNowPlaying(page: page);
+    } catch (e) {
+      // Si falla, usamos el datasource local
+      return await localDatasource.getNowPlaying(page: page);
+    }
+  }
+}
+```
+---
 
 > 💡 Esta estructura está basada en los principios de Clean Architecture adaptados para apps Flutter.
