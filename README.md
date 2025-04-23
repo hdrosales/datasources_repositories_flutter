@@ -53,6 +53,15 @@ Este proyecto es un ejemplo de cómo estructurar una app Flutter consumiendo la 
 - Fácil de mantener y entender ✅
 
 ---
+## 📎 Documentación adicional
+
+- 📘 [Notas de Arquitectura](ARCHITECTURE_NOTES.md)  
+  Explicación sobre datasources, repositories, mappers, clases abstractas y el flujo de datos.
+
+- 🧰 [Guía de Herramientas](TOOLS.md)  
+  Cómo usar [Quicktype.io](https://app.quicktype.io) para generar modelos desde JSON y [Postman](https://www.postman.com/) para testear APIs.
+
+---
 
 ## ⚠️ Importante
 
