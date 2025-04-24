@@ -1,0 +1,34 @@
+# 🧱 Patrón Repository + Datasource con Clases Abstractas en Dart/Flutter
+
+Este documento explica cómo estructurar la lógica de acceso a datos en una aplicación Flutter utilizando un patrón basado en **Repository** y **Datasource**, aplicando principios de **desacoplamiento** y **responsabilidad única**.
+
+---
+
+## 🧠 ¿Por qué usar Repository + Datasource?
+
+Separar la lógica en capas desacopladas permite:
+
+- ✅ Mantener una arquitectura limpia y escalable.
+- 🔁 Reemplazar fácilmente el origen de datos (API REST, Firebase, SQLite, mocks).
+- 🧪 Hacer testing más fácil con mocks o datasources falsos.
+- ♻️ Seguir principios SOLID, especialmente **Inversión de dependencias**.
+
+---
+
+## 🧩 Estructura básica
+
+```text
+/lib
+  └── domain/
+      ├── entities/
+      │   └── movie.dart
+      ├── datasources/
+      │   └── movies_datasource.dart    👈 abstract class
+      └── repositories/
+          └── movies_repository.dart    👈 abstract class
+
+  └── infrastructure/
+      ├── datasources/
+      │   └── moviedb_datasource.dart   👈 implementación concreta
+      └── repositories/
+          └── movie_repository_impl.dart 👈 implementación del repositorio
